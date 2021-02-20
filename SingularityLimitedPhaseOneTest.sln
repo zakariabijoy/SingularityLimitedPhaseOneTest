@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingularityLimitedPhaseOneTest", "SingularityLimitedPhaseOneTest\SingularityLimitedPhaseOneTest.csproj", "{A76506EB-BF12-4EDE-BF9A-2C7A5B785FEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A76506EB-BF12-4EDE-BF9A-2C7A5B785FEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A76506EB-BF12-4EDE-BF9A-2C7A5B785FEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A76506EB-BF12-4EDE-BF9A-2C7A5B785FEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A76506EB-BF12-4EDE-BF9A-2C7A5B785FEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DE4EFA42-CC89-4727-9ABB-09F46BC71686}
+	EndGlobalSection
+EndGlobal
