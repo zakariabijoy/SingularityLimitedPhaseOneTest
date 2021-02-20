@@ -26,6 +26,7 @@ namespace SingularityLimitedPhaseOneTest
                 {
                     var context = services.GetRequiredService<SingularityLimitedPhaseOneTestContext>();
                     context.Database.Migrate();
+                    Seed.SeedData(context);
                 }
                 catch (System.Exception ex)
                 {
