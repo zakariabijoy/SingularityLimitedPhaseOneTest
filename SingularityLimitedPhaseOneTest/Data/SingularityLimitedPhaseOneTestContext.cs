@@ -9,11 +9,13 @@ namespace SingularityLimitedPhaseOneTest.Data
 {
     public class SingularityLimitedPhaseOneTestContext : DbContext
     {
-        public SingularityLimitedPhaseOneTestContext (DbContextOptions<SingularityLimitedPhaseOneTestContext> options)
+        public SingularityLimitedPhaseOneTestContext(DbContextOptions<SingularityLimitedPhaseOneTestContext> options)
             : base(options)
         {
         }
 
         public DbSet<Product> Product { get; set; }
+
+
     }
 }
