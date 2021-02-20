@@ -31,6 +31,12 @@ namespace SingularityLimitedPhaseOneTest
 
             services.AddDbContext<SingularityLimitedPhaseOneTestContext>(options =>
                     options.UseSqlite(Configuration.GetConnectionString("SingularityLimitedPhaseOneTestContext")));
+
+            services.AddCors(options => {
+                options.AddPolicy("CorsPolicy", policy => {
+                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +48,7 @@ namespace SingularityLimitedPhaseOneTest
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 
