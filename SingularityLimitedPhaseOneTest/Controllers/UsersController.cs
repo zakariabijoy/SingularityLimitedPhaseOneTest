@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace SingularityLimitedPhaseOneTest.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -27,6 +29,7 @@ namespace SingularityLimitedPhaseOneTest.Controllers
             _appSettings = appSettings.Value;
         }
 
+        [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] User model)
         {
@@ -54,6 +57,8 @@ namespace SingularityLimitedPhaseOneTest.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             user.Token = tokenHandler.WriteToken(token);
+
+            user.Password = "";
 
             return Ok(user);
         }
