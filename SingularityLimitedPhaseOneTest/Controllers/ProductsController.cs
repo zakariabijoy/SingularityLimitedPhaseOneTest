@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SingularityLimitedPhaseOneTest.Data;
 using SingularityLimitedPhaseOneTest.Models;
+using SingularityLimitedPhaseOneTest.Models.Dtos;
 
 namespace SingularityLimitedPhaseOneTest.Controllers
 {
@@ -92,7 +93,7 @@ namespace SingularityLimitedPhaseOneTest.Controllers
             
             if (id != product.Id)
             {
-                return BadRequest();
+                return BadRequest("Id is not matched");
             }
             var p = await _context.Product.FindAsync(id);
             if(p.DeleteStatus == true || p.LockStatus == true)
@@ -100,7 +101,13 @@ namespace SingularityLimitedPhaseOneTest.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            p.Name = product.Name;
+            p.SKU = product.SKU;
+            p.Description = product.Description;
+            p.Price = product.Price;
+            p.DeleteStatus = product.DeleteStatus;
+            p.LockStatus = product.LockStatus;
+            
 
             try
             {
@@ -118,18 +125,28 @@ namespace SingularityLimitedPhaseOneTest.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Products
        
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct(ProductDto product)
         {
-            _context.Product.Add(product);
+            var p = new Product
+            {
+                Name = product.Name,
+                SKU = product.SKU,
+                Price = product.Price,
+                Description = product.Description,
+                DeleteStatus =false,
+                LockStatus =false
+               
+            };
+            _context.Product.Add(p);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            return CreatedAtAction("GetProduct", new { id = p.Id },p);
         }
 
         // DELETE: api/Products/5
