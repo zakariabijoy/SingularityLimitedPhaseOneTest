@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace SingularityLimitedPhaseOneTest.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -109,6 +109,48 @@ namespace SingularityLimitedPhaseOneTest.Controllers
            
 
             return Ok(u);
+        }
+
+        [HttpPost("CreateUser")]
+        public IActionResult CreateUser([FromBody] RegisterDto model)
+        {
+            var user = _context.Users.SingleOrDefault(u => u.UserName == model.UserName);
+            var isUserNameUnique = user == null ? true : false;
+            if (!isUserNameUnique)
+            {
+                return BadRequest(new { message = "UserName is already exists" });
+            }
+
+            var u = new User
+            {
+                UserName = model.UserName,
+                Password = model.Password,
+                Role = model.Role
+            };
+            _context.Users.Add(u);
+            _context.SaveChanges();
+
+            u.Password = "";
+
+
+            return Ok(u);
+        }
+
+        [HttpDelete("RemoveUser/{id}")]
+        public async Task<ActionResult<User>> RemoveUserAsync(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+
+             _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return user;
+
         }
 
 
