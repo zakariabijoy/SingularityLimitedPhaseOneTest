@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SingularityLimitedPhaseOneTest.Data;
 using SingularityLimitedPhaseOneTest.Models;
+using SingularityLimitedPhaseOneTest.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -31,7 +32,7 @@ namespace SingularityLimitedPhaseOneTest.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] User model)
+        public IActionResult Authenticate([FromBody] AuthenticationDto model)
         {
             var user = _context.Users.SingleOrDefault(u => u.UserName == model.UserName && u.Password == model.Password);
 
@@ -68,7 +69,7 @@ namespace SingularityLimitedPhaseOneTest.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register([FromBody] User model)
+        public IActionResult Register([FromBody] RegisterDto model)
         {
             var user = _context.Users.SingleOrDefault(u => u.UserName == model.UserName);
             var isUserNameUnique = user == null ? true : false;
