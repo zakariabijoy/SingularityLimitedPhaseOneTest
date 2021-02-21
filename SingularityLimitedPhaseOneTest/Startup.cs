@@ -32,6 +32,9 @@ namespace SingularityLimitedPhaseOneTest
             services.AddDbContext<SingularityLimitedPhaseOneTestContext>(options =>
                     options.UseSqlite(Configuration.GetConnectionString("SingularityLimitedPhaseOneTestContext")));
 
+            var appSettings = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettings);
+
             services.AddCors(options => {
                 options.AddPolicy("CorsPolicy", policy => {
                     policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
