@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SingularityLimitedPhaseOneTest.Data;
@@ -153,6 +154,11 @@ namespace SingularityLimitedPhaseOneTest.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetUser()
+        {
+            return await _context.Users.ToListAsync();
+        }
 
     }
 }
