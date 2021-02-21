@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace SingularityLimitedPhaseOneTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles ="Admin")]
     public class ProductsController : ControllerBase
     {
         private readonly SingularityLimitedPhaseOneTestContext _context;
@@ -88,6 +90,7 @@ namespace SingularityLimitedPhaseOneTest.Controllers
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
+       
         public async Task<ActionResult<Product>> DeleteProduct(int id)
         {
             var product = await _context.Product.FindAsync(id);
