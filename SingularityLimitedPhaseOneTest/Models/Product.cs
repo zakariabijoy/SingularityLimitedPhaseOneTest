@@ -12,6 +12,8 @@ namespace SingularityLimitedPhaseOneTest.Models
         public string SKU { get; set; }
         public double Price { get; set; }
         public string Description { get; set; }
+        public Boolean DeleteStatus { get; set; }
+        public Boolean LockStatus { get; set; }
 
     }
 }

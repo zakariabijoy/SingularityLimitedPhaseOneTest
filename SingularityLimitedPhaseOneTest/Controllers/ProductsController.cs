@@ -13,7 +13,7 @@ namespace SingularityLimitedPhaseOneTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles ="Admin")]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly SingularityLimitedPhaseOneTestContext _context;
@@ -25,9 +25,16 @@ namespace SingularityLimitedPhaseOneTest.Controllers
 
         // GET: api/Products
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
-            return await _context.Product.ToListAsync();
+            return await _context.Product.Where(p => p.DeleteStatus != true).ToListAsync();
+        }
+
+        [HttpGet("GetTrashProduct")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetTrashProduct()
+        {
+            return await _context.Product.Where(p => p.DeleteStatus == true).ToListAsync();
         }
 
         // GET: api/Products/5
@@ -36,7 +43,7 @@ namespace SingularityLimitedPhaseOneTest.Controllers
         {
             var product = await _context.Product.FindAsync(id);
 
-            if (product == null)
+            if (product == null || product.DeleteStatus == true)
             {
                 return NotFound();
             }
@@ -44,13 +51,51 @@ namespace SingularityLimitedPhaseOneTest.Controllers
             return product;
         }
 
+        [HttpPost("RecoverProduct/{id}")]
+        public async Task<ActionResult<Product>> RecoverProduct(int id)
+        {
+            var product = await _context.Product.FindAsync(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            product.DeleteStatus = false;
+
+            await _context.SaveChangesAsync();
+            return product;
+        }
+
+        [HttpPost("LockProduct/{id}")]
+        public async Task<ActionResult<Product>> LockProduct(int id)
+        {
+            var product = await _context.Product.FindAsync(id);
+
+            if (product == null || product.DeleteStatus == true)
+            {
+                return NotFound();
+            }
+
+            product.LockStatus = product.LockStatus != true;
+
+
+            await _context.SaveChangesAsync();
+            return product;
+        }
+
         // PUT: api/Products/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
+            
             if (id != product.Id)
+            {
+                return BadRequest();
+            }
+            var p = await _context.Product.FindAsync(id);
+            if(p.DeleteStatus == true || p.LockStatus == true)
             {
                 return BadRequest();
             }
@@ -77,8 +122,7 @@ namespace SingularityLimitedPhaseOneTest.Controllers
         }
 
         // POST: api/Products
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+       
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
@@ -93,13 +137,17 @@ namespace SingularityLimitedPhaseOneTest.Controllers
        
         public async Task<ActionResult<Product>> DeleteProduct(int id)
         {
-            var product = await _context.Product.FindAsync(id);
-            if (product == null)
+            var product = await _context.Product.FirstOrDefaultAsync(p => p.DeleteStatus != true && p.Id == id);
+            if (product == null )
             {
                 return NotFound();
             }
+            if(product.LockStatus == true)
+            {
+                return BadRequest();
+            }
 
-            _context.Product.Remove(product);
+            product.DeleteStatus = true;
             await _context.SaveChangesAsync();
 
             return product;
