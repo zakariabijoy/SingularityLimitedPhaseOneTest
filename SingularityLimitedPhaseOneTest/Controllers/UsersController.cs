@@ -64,7 +64,30 @@ namespace SingularityLimitedPhaseOneTest.Controllers
         }
 
 
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] User model)
+        {
+            var user = _context.Users.SingleOrDefault(u => u.UserName == model.UserName);
+            var isUserNameUnique = user == null ? true : false;
+            if (!isUserNameUnique)
+            {
+                return BadRequest(new { message = "UserName is already exists" });
+            }
 
-       
+            var u = new User
+            {
+                UserName = model.UserName,
+                Password = model.Password
+            };
+            _context.Users.Add(u);
+            _context.SaveChanges();
+
+            u.Password = "";
+
+            return Ok(u);
+        }
+
+
     }
 }
